@@ -25,9 +25,7 @@ const studentList=async (req,res)=>{
 }
 
 const studentDetails=async (req,res)=>{
-
     const id= req.params.id;
-
     try{
         const student =await Student.findById(id);
         if(!student){
@@ -36,12 +34,37 @@ const studentDetails=async (req,res)=>{
         else {
             res.send(student)
         }
-
     }catch (err){
         return res.status(404).send("ID Not Found")
     }
+}
+
+const studentUpdate=async (req,res)=>{
+    const id =req.params.id;
+    const updateData=req.body;
+
+    try{
+        const student=await Student.findByIdAndUpdate(id,updateData,{
+            new:true,
+        });
+        res.send(student)
+    }catch (err){
+        return res.status(400).send("Id Not Found")
+    }
 
 }
+
+const studentDelete=async (req,res)=>{
+    const id =req.params.id;
+
+    try{
+        const student= await Student.findByIdAndDelete(id)
+        res.send(student);
+    }catch (err){
+        return res.status(404).send("ID NOT FOUND")
+    }
+
+};
 
 
 
@@ -53,5 +76,7 @@ router.route('/')
 
 router.route('/:id')
     .get(studentDetails)
+    .put(studentUpdate)
+    .delete(studentDelete)
 
 module.exports=router
